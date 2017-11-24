@@ -13,11 +13,21 @@
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
 
-my.summary <- function(x,...){
-  c(mean=mean(x, ...),
+my.summary <- function(x,showNA=TRUE,round=TRUE,digits=2,...){
+
+  stopifnot(is.numeric(x))
+
+  ms = c(mean=mean(x, ...),
     sd=sd(x, ...),
     median=median(x, ...),
     min=min(x, ...),
     max=max(x,...),
     n=length(x))
+
+  if(showNA) ms = c(ms,'NAs' = sum(is.na(x)))
+
+  if(round) ms = round(ms,digits = digits)
+
+  return(ms)
+
 }
