@@ -1,11 +1,13 @@
 Package: UEMR
+Date: 2017-11-24
 Type: Package
-Title: Essential functions for UEM data analysis projects (UEMR)
+Title: Unitat Estudi del Medicament R functions (UEMR)
 Version: 0.1.0
 Author: Oriol Prats & Dan Ouchi
 Maintainer: Dan Ouchi <douchi@idiapjgol.info>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Depends: R (>=2.1.0), dplyr
+Suggest: epitools
+Description: Tools for data management and statistical analysis in projects related to the UEM
 License: GPL-3.0
 Encoding: UTF-8
 LazyData: true
