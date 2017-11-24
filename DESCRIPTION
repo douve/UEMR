@@ -1,0 +1,11 @@
+Package: UEMR
+Type: Package
+Title: Essential functions for UEM data analysis projects (UEMR)
+Version: 0.1.0
+Author: Oriol Prats & Dan Ouchi
+Maintainer: Dan Ouchi <douchi@idiapjgol.info>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
