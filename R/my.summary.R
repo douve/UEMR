@@ -13,21 +13,41 @@
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
 
-my.summary <- function(x,showNA=TRUE,round=TRUE,digits=2,...){
+my.summary <- function(x,factor=FALSE,showNA=TRUE,digits=NULL,...){
+
+  if(factor){
+
+    if(class(x)!='factor') x= as.factor(x)
+
+    useNA = ifelse(showNA,'always','no')
+    tab = table(x,useNA=useNA)
+    tab = tab %>% data.frame
+
+    n= tab$Freq
+    N=sum(tab$Freq)
+    p = perc(n,N)
+
+    res = n_per(n,p)
+    names(res) = as.character(tab$x)
+
+
+  }else{
 
   stopifnot(is.numeric(x))
 
-  ms = c(mean=mean(x, ...),
+  res = c(mean=mean(x, ...),
     sd=sd(x, ...),
     median=median(x, ...),
     min=min(x, ...),
     max=max(x,...),
     n=length(x))
 
-  if(showNA) ms = c(ms,'NAs' = sum(is.na(x)))
+  if(showNA) res = c(res,'<NA>' = sum(is.na(x)))
 
-  if(round) ms = round(ms,digits = digits)
+  if(!is.null(digits)) res = round(res,digits = digits)
 
-  return(ms)
+  }
+
+  return(res)
 
 }
