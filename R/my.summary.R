@@ -13,9 +13,13 @@
 #   Check Package:             'Cmd + Shift + E'
 #   Test Package:              'Cmd + Shift + T'
 
-my.summary <- function(x,factor=FALSE,showNA=TRUE,digits=NULL,...){
+my.summary <- function(x,showNA=TRUE,digits=NULL,...){
 
-  if(factor){
+  c = class(x)
+
+  cat("Statistical summary for",c,"variable\n")
+
+  if(c=="factor"){
 
     if(class(x)!='factor') x= as.factor(x)
 
