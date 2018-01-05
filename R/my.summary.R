@@ -21,7 +21,7 @@ my.summary <- function(x,factor=FALSE,showNA=TRUE,digits=NULL,...){
 
     useNA = ifelse(showNA,'always','no')
     tab = table(x,useNA=useNA)
-    tab = tab %>% data.frame
+    tab = as.data.frame(tab)
 
     n= tab$Freq
     N=sum(tab$Freq)
