@@ -7,7 +7,9 @@ Author: Oriol Prat & Dan Ouchi
 Maintainer: Dan Ouchi <douchi@idiapjgol.info>
 Depends: R (>= 2.1.0), dplyr
 Imports: 
-    epitools
+    epitools,
+    data.table,
+    stringr
 Description: Tools for data management and statistical analysis in projects related to UEM
 License: GPL-3.0
 Encoding: UTF-8
