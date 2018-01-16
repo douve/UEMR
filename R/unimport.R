@@ -5,30 +5,36 @@
 # 4 type of files: .R, .rds, .txt, .csv
 # Requires the path and the filename
 
-unimport = function(type="sidiap",path,filename){
+unimport = function(type="sidiap",path,filename,...){
 
   if(type=="R"){
-    lf = list.files(path=path,pattern = ".R",full.names=T)
+    lf = list.files(path=path,recursive=T,pattern = ".R",full.names=T)
     fn = grep(filename,lf,value=T) # full file name
     source(fn)
   }
   if(type=="rds"){
-    lf = list.files(path=path,pattern = ".rds",full.names=T)
+    lf = list.files(path=path,recursive=T,pattern = ".rds",full.names=T)
     fn = grep(filename,lf,value=T) # full file name
-    readRDS(fn)
+    aux = readRDS(fn)
+
+    return(aux)
   }
   if(type=="sidiap"){
-    lf = list.files(path=path,pattern = ".txt",full.names=T)
+    lf = list.files(path=path,recursive=T,pattern = ".txt",full.names=T)
     fn = grep(filename,lf,value=T) # full file name
-    aux = sidiap.import(fn)
+    aux = sidiap.import(fn,...)
 
-    # busca i formateja dates....
     return(aux)
   }
   if(type=="catalogue"){
-    lf = list.files(path=path,pattern = ".txt|.csv",full.names=T)
+    lf = list.files(path=path,recursive=T,pattern = ".txt|.csv|.xlsx",full.names=T)
     fn = grep(filename,lf,value=T) # full file name
-    cat.import(fn)
+    aux = cat.import(fn,...)
+
+    return(aux)
   }
 
 }
+
+
+
