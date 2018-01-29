@@ -41,7 +41,9 @@ my.summary <- function(x,showNA=TRUE,digits=NULL,...){
 
   res = c(mean=mean(x, ...),
     sd=sd(x, ...),
+    q1=quantile(x, ...)[[2]],
     median=median(x, ...),
+    q3=quantile(x, ...)[[4]],
     min=min(x, ...),
     max=max(x,...),
     n=length(x))
