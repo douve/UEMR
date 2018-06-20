@@ -5,15 +5,25 @@
 file_choose
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+returns the path of the desired file from among a set of possible files.
 }
 \usage{
-file_choose(x)
+file_choose(type,path,filename,dialogue="console")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{type}{
 data format (txt, xlsx, csv etc)
+}
+  \item{path}{
+Location of filename
+}
+  \item{filename}{
+File name
+}
+  \item{dialogue}{
+The dialog method is for selecting the appropriate file.
+By default "console", is via the console. And specifying "window" is by means of a graphic window.
 }
 }
 \details{

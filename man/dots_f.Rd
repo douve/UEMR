@@ -8,7 +8,7 @@ dots_f
 Returns arguments that do belong to a specific function or set of functions
 }
 \usage{
-dots_f(x)
+dots_f(l,args)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
