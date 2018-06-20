@@ -2,7 +2,7 @@
 \alias{dots_f}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+dots_f
 }
 \description{
 Returns arguments that do belong to a specific function or set of functions
