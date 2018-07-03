@@ -5,10 +5,9 @@ Title: Unitat Estudi del Medicament R functions (UEMR)
 Version: 0.1.1
 Author: Oriol Prat & Dan Ouchi
 Maintainer: Dan Ouchi <douchi@idiapjgol.info>
-Depends: R (>= 2.1.0), dplyr, anytime
+Depends: R (>= 2.1.0), dplyr, data.table, anytime
 Imports: 
     epitools,
-    data.table,
     stringr,
     xlsx
 Description: Tools for data management and statistical analysis in projects related to UEM
