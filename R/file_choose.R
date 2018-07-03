@@ -1,17 +1,16 @@
-file_choose <- function(type,path,filename,dialogue="console") {
-  names.fl = grep(paste0("(?=.*",filename,
-                         ")(?=.*\\.",type,")"),
-                  list.files(path=path), perl = T, value = T, ignore.case = T)
-  if (dialogue == "window") {
-    setwd(path)
-    Myfile = choose.files(default=paste0(getwd(), "/*.*"))
-  }
+## Return the path of a selected file
+
+file_choose <- function(input,dialogue="console") {
 
   if (dialogue == "console") {
     cat("Select the desired file: (row number)\n")
-    unname(cbind(names.fl)) %>% print
+    input %>% basename %>% cbind %>% unname %>% print
     pos = scan(n=1, quiet=T)
-    Myfile = paste0(path,"/", names.fl[pos])
+    Myfile = input[pos]
+  } else if (dialogue == "window") {
+    path <- sub('/([^/]*)$', '', input[1])
+    setwd(path)
+    Myfile = choose.files(default=paste0(getwd(), "/*.*"))
   }
   return(Myfile)
 }

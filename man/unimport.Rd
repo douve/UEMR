@@ -5,24 +5,24 @@
 unimport
 }
 \description{
-Reads a file in (txt, csv, xlsx and sidiap) formats and creates a data frame from it.
+Reads a file in 6 data types (Rscript, Rimage, data.frame, excel, csv, sidiap and textfile) and creates a data frame from it.
 }
 \usage{
-unimport(type, path, filename, exact_match = F, ...)
+unimport(type, path, filename, exact_string = F, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{type}{
-%%     ~~Describe \code{type} here~~
+The data type of the file to import. Can be Rscript, Rimage, data.frame, excel, csv, sidiap and textfile.
 }
   \item{path}{
-%%     ~~Describe \code{path} here~~
+Location of the file to import.
 }
   \item{filename}{
-%%     ~~Describe \code{filename} here~~
+Name of the filename. Can be a substring of this.
 }
   \item{exact_match}{
-%%     ~~Describe \code{exact_match} here~~
+default is FALSE. If TRUE then the files will be searched for that have exactly the requested file name and no more characters.
 }
   \item{\dots}{
 %%     ~~Describe \code{\dots} here~~
@@ -54,48 +54,10 @@ unimport(type, path, filename, exact_match = F, ...)
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (type, path, filename, exact_match = F, ...)
-{
-    if (type == "sidiap") {
-        lf = list.files(path = path, recursive = T, pattern = ".txt")
-        fn = paste0(path, "/", grep(filename, lf, value = T))
-        aux = sidiap.import(fn, ...)
-    }
-    else {
-        lf = list.files(path = path, recursive = T, pattern = paste0(".",
-            type))
-        if (exact_match) {
-            fn = paste0(path, "/", grep(paste0("^", filename,
-                ".", type, "$"), lf, value = T, ignore.case = T))
-        }
-        else {
-            fn = paste0(path, "/", grep(filename, lf, value = T,
-                ignore.case = T))
-        }
-        dots = list(...)
-        if (length(fn) > 1L) {
-            fnames = names(formals(file_choose))
-            fn = do.call(file_choose, c(type, path, filename,
-                dots[names(dots) \%in\% fnames]))
-        }
-        if (type == "rds") {
-            aux = readRDS(fn)
-        }
-        else if (type == "R") {
-            aux = source(fn)
-        }
-        else if (type \%in\% c("txt", "csv", "xlsx")) {
-            aux = do.call(cat.import, c(normalizePath(fn), dots_f(list(xlsx = "read.xlsx",
-                data.table = c("fread")), dots)))
-        }
-    }
-    return(aux)
-  }
+df123 <- data.frame(a=rnorm(10), b=runif(10)) # Create a data frame object
+saveRDS(df123,paste0(getwd(),"/df123.rds")) # we save it on our current directory
+# we load it with unimport
+unimport(type = "data.frame", path = getwd(), filename = "df")
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

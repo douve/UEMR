@@ -8,22 +8,17 @@ file_choose
 returns the path of the desired file from among a set of possible files.
 }
 \usage{
-file_choose(type,path,filename,dialogue="console")
+file_choose(input,dialogue="console")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{type}{
-data format (txt, xlsx, csv etc)
+  \item{input}{
+the paths of a set of files.
 }
-  \item{path}{
-Location of filename
-}
-  \item{filename}{
-File name
-}
+
   \item{dialogue}{
 The dialog method is for selecting the appropriate file.
-By default "console", is via the console. And specifying "window" is by means of a graphic window.
+By default "console", is via the console. And "window" is by means of a graphic window.
 }
 }
 \details{
