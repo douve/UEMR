@@ -2,7 +2,7 @@
 
 cat.import <- function(file, ...){
   type = stringr::str_extract(file,'[^.]*$')
-  if(type == "xlsx") {
+  if (grepl("xlsx|xls",type)) {
     l <- dots_f(list(readxl="read_excel"), list(...))
     if (is.null(l$sheet)) l$sheet = 1
     l = c(list(file),l)
