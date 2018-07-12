@@ -9,7 +9,7 @@ unimport <- function(type,path,filename,exact_string=F, ...){
   elli <- list(...)
   equivalences <-data.table(
     Filetype=c("Rscript","Rimage","data.frame","excel","csv","sidiap","textfile"),
-    Extension=c("R","RData|rda","rds","xlsx","csv","txt","txt"))
+    Extension=c("R","RData|rda","rds","xlsx|xls","csv","txt","txt"))
 
   ext <- equivalences[Filetype==type,Extension] # we get the extension of our type
 
