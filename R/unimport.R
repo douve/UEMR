@@ -34,7 +34,7 @@ unimport <- function(type,path,filename,exact_string=F, ...){
   if (type %in% c("textfile","excel","csv")) {
     do.call(cat.import,c(fn, elli))
   } else if (type == "Rscript") {
-    source(fn)
+    do.call(source, c(list(fn),dots_f(list(base="source"),elli)))
   } else if (type == "data.frame") {
     readRDS(fn)
   } else if (type=="sidiap") {
