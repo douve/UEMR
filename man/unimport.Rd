@@ -5,7 +5,7 @@
 unimport
 }
 \description{
-Reads a file in 6 data types (Rscript, Rimage, data.frame, excel, csv, sidiap and textfile) and creates a data frame from it.
+Reads a file in 6 data types (Rscript, Rimage, Robject, data.frame, excel, csv, sidiap and textfile) and creates a data frame from it.
 }
 \usage{
 unimport(type, path, filename, exact_string = F, ...)
@@ -54,7 +54,7 @@ default is FALSE. If TRUE then the files will be searched for that have exactly 
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-df123 <- data.frame(a=rnorm(10), b=runif(10)) # Create a data frame object
+df123 <- data.frame(a=rnorm(10), b=runif(10)) # Creates a data frame object
 saveRDS(df123,paste0(getwd(),"/df123.rds")) # we save it on our current directory
 # we load it with unimport
 unimport(type = "data.frame", path = getwd(), filename = "df")

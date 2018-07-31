@@ -2,10 +2,10 @@
 \alias{uniexport}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-%%  ~~function to do ... ~~
+uniexport
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Exports files in 5 different data types (Robject, Rimage, excel, csv and textfile)
 }
 \usage{
 uniexport(x)
@@ -15,17 +15,21 @@ uniexport(x)
   \item{Robject}{
 the object to be writen. It must be written in quotes
 }
-\item{type}{
+  \item{type}{
 the data type of the file to export. Can be Robject, Rimage, excel, csv and textfile.
 }
-\item{path}{
+  \item{path}{
 location of the file to export.
 }
-\item{filename}{
+  \item{filename}{
 name of the filename. By default, it will be the name of the R object.
 }
-\item{date}{
+  \item{date}{
 a logical value indicating whether the filename must include the current date.
+}
+  \item{\dots}{
+%%     ~~Describe \code{\dots} here~~
+}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -53,14 +57,8 @@ a logical value indicating whether the filename must include the current date.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-
-## The function is currently defined as
-function (x)
-{
-  }
+df <- data.frame(a=rnorm(10), b=runif(10)) # Create a data frame object
+uniexport(Robject="df", type = "csv", path = getwd(), date=T)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
