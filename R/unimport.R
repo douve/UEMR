@@ -8,8 +8,8 @@
 unimport <- function(type,path,filename,exact_string=F, ...){
   elli <- list(...)
   equivalences <-data.table(
-    Filetype=c("Rscript","Rimage","data.frame","excel","csv","sidiap","textfile"),
-    Extension=c("R","RData|rda","rds","xlsx|xls","csv","txt","txt"))
+    Filetype=c("Rscript","Rimage","Robject","data.frame","excel","csv","sidiap","textfile"),
+    Extension=c("R","RData|rda","rds","rds","xlsx|xls","csv","txt","txt"))
 
   ext <- equivalences[Filetype==type,Extension] # we get the extension of our type
 
@@ -35,7 +35,7 @@ unimport <- function(type,path,filename,exact_string=F, ...){
     do.call(cat.import,c(fn, elli))
   } else if (type == "Rscript") {
     do.call(source, c(list(fn),dots_f(list(base="source"),elli)))
-  } else if (type == "data.frame") {
+  } else if (type %in% c("Robject","data.frame")) {
     readRDS(fn)
   } else if (type=="sidiap") {
     sidiap.import(fn)
