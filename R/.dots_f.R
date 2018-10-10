@@ -1,4 +1,4 @@
-dots_f <- function(l, args) {
+.dots_f <- function(l, args) {
   y <- names(l)
   funs <- lapply(y, function(y) paste0(y,"::",l[[y]])) %>% unlist
   params <- lapply(funs,

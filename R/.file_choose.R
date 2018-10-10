@@ -1,6 +1,6 @@
 ## Return the path of a selected file
 
-file_choose <- function(input,dialogue="console") {
+.file_choose <- function(input,dialogue="console") {
 
   if (dialogue == "console") {
     cat("Select the desired file: (row number)\n")

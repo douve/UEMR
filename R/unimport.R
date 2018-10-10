@@ -27,18 +27,18 @@ unimport <- function(type,path,filename,exact_string=F, ...){
   }
 
   if (length(fn) > 1L) {
-    file_choose_names = names(formals(file_choose))
-    fn = do.call(file_choose,c(list(fn),dots_f(list(UEMR="file_choose"), elli)))
+    file_choose_names = names(formals(.file_choose))
+    fn = do.call(.file_choose,c(list(fn),.dots_f(list(UEMR=".file_choose"), elli)))
   }
 
   if (type %in% c("textfile","excel","csv")) {
-    do.call(cat.import,c(fn, elli))
+    do.call(.cat.import,c(fn, elli))
   } else if (type == "Rscript") {
-    do.call(source, c(list(fn),dots_f(list(base="source"),elli)))
+    do.call(source, c(list(fn),.dots_f(list(base="source"),elli)))
   } else if (type %in% c("Robject","data.frame")) {
     readRDS(fn)
   } else if (type=="sidiap") {
-    sidiap.import(fn)
+    .sidiap.import(fn)
   } else if (type == "Rimage") {
     load(fn, envir = .GlobalEnv)
   }

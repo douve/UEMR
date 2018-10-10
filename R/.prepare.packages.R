@@ -1,4 +1,4 @@
-prepare.packages <- function(x, update=F) {
+.prepare.packages <- function(x, update=F) {
 
   pcs_inst <- x[x %in% installed.packages()[,1]]
 

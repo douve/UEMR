@@ -1,4 +1,4 @@
-uemFormatC <- function(x,estimate=FALSE,lower,upper,digits=2,format="f",...){
+.uemFormatC <- function(x,estimate=FALSE,lower,upper,digits=2,format="f",...){
 
 
   if(estimate){

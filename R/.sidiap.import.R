@@ -1,0 +1,11 @@
+
+
+## sidiap.import function
+
+# Use fread configured for SIDIAP databases:
+.sidiap.import = function(x,sep="|",...){
+
+  data.table::fread(x,sep=sep,...) %>%
+    mutate_if(.,is.integer,uem.anydate)
+
+}

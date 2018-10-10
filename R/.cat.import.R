@@ -1,6 +1,6 @@
 ## Import data in (excel, csv, textfile) types
 
-cat.import <- function(file, ...){
+.cat.import <- function(file, ...){
   type = stringr::str_extract(file,'[^.]*$')
   if (grepl("xlsx|xls",type)) {
     l <- dots_f(list(readxl="read_excel"), list(...))

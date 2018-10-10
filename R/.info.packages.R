@@ -1,4 +1,4 @@
-info_packages <- function(x) {
+.info.packages <- function(x) {
   boolps <- x %in% available.packages()[,1]
   if (any(!boolps)) {
     n <- sum(!boolps)
