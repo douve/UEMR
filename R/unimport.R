@@ -1,3 +1,59 @@
+.dots_f <- function(l, args) {
+  y <- names(l)
+  funs <- lapply(y, function(y) paste0(y,"::",l[[y]])) %>% unlist
+  params <- lapply(funs,
+                   function(x) eval(parse(text = x)) %>% formals %>% names) %>% unlist
+  params <- unique(params)
+  args[names(args) %in% params]
+}
+
+
+.cat.import <- function(file, ...){
+  type = stringr::str_extract(file,'[^.]*$')
+  if (grepl("xlsx|xls",type)) {
+    l <- .dots_f(list(readxl="read_excel"), list(...))
+    if (is.null(l$sheet)) l$sheet = 1
+    l = c(list(file),l)
+    out = data.table::setDT(do.call(readxl::read_excel, l))
+  } else {
+    l <- .dots_f(list(data.table="fread"), list(...))
+    l = c(list(file),l)
+    out = do.call(data.table::fread, l)
+  }
+  out[out==''] <- NA
+  return(out)
+}
+
+
+file_choose <- function(input,dialogue="console") {
+
+  if (dialogue == "console") {
+    cat("Select the desired file: (row number)\n")
+    input %>% basename %>% cbind %>% unname %>% print
+    pos = scan(n=1, quiet=T)
+    Myfile = input[pos]
+  } else if (dialogue == "window") {
+    path <- sub('/([^/]*)$', '', input[1])
+    setwd(path)
+    Myfile = choose.files(default=paste0(getwd(), "/*.*"))
+  }
+  return(Myfile)
+}
+
+
+# sidiap.import = function(x,sep="|",...){
+#
+#   data.table::fread(x,sep=sep,...) %>%
+#     mutate_if(.,is.integer,uem.anydate)
+#
+# }
+
+.sidiap.import <- function(x,sep="|",...){
+
+  d <- `if`(sub('.*\\.', '', x)=="rds", readRDS(x), fread(x,sep=sep,...))
+  mutate_if(d,is.integer,uem.anydate)
+
+}
 
 
 ## unimport: Import any kind of file used in a UEM statistical analysis project.
@@ -9,7 +65,7 @@ unimport <- function(type,path,filename,exact_string=F, ...){
   elli <- list(...)
   equivalences <-data.table(
     Filetype=c("Rscript","Rimage","Robject","data.frame","excel","csv","sidiap","textfile"),
-    Extension=c("R","RData|rda","rds","rds","xlsx|xls","csv","txt","txt"))
+    Extension=c("R","RData|rda","rds","rds","xlsx|xls","csv","txt|rds","txt"))
 
   ext <- equivalences[Filetype==type,Extension] # we get the extension of our type
 
@@ -27,8 +83,8 @@ unimport <- function(type,path,filename,exact_string=F, ...){
   }
 
   if (length(fn) > 1L) {
-    file_choose_names = names(formals(.file_choose))
-    fn = do.call(.file_choose,c(list(fn),.dots_f(list(UEMR=".file_choose"), elli)))
+    file_choose_names = names(formals(file_choose))
+    fn = do.call(file_choose,c(list(fn),.dots_f(list(UEMR="file_choose"), elli)))
   }
 
   if (type %in% c("textfile","excel","csv")) {
