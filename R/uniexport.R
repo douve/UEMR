@@ -1,4 +1,21 @@
 
+.path_to_export <- function(path, filename, ext, date=FALSE) {
+  n <- nchar(path)
+  if (stringr::str_sub(path,start = n,end = n)!="/") path <- paste0(path,"/")
+  if (date) d <- paste0("_",Sys.Date()) else d <- ""
+  paste0(path,filename,d,".",ext)
+}
+
+.dots_f <- function(l, args) {
+  y <- names(l)
+  funs <- lapply(y, function(y) paste0(y,"::",l[[y]])) %>% unlist
+  params <- lapply(funs,
+                   function(x) eval(parse(text = x)) %>% formals %>% names) %>% unlist
+  params <- unique(params)
+  args[names(args) %in% params]
+}
+
+
 
 ## uniexport: Export any kind of file used in a UEM statistical analysis project.
 

@@ -1,4 +1,4 @@
-load.packages <- function(x=NULL, update=F, dependent_pcs=F) {
+load.packages <- function(x=NULL, update=F, dependent_pcs=T) {
   default.pcs <- c("data.table","tidyverse","tableone",
                    "anytime","VennDiagram","lubridate","epitools", "survival",
                    "readxl")
