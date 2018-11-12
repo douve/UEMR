@@ -1,4 +1,4 @@
-## get_os()
+##-  get_os
 get_os <- function(){
   sysinf <- Sys.info()
   if (!is.null(sysinf)){
@@ -16,7 +16,7 @@ get_os <- function(){
   tolower(os)
 }
 
-
+##- idGen
 idGen = function(data,N=NULL,prefix){
 
   # unique seed created from project.name_
