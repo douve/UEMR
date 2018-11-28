@@ -24,7 +24,7 @@
 
 uniexport <- function(Robject,type,path,filename=NULL,date=FALSE, ...){
   elli <- list(...)
-  if (is.null(filename)) filename <- deparse(quote(Robject))
+  if (is.null(filename)) filename <- deparse(substitute(Robject))
   eqDT <- data.table(
     Filetype=c("Rimage","Robject","excel","csv","textfile"),
     ext=c("RData","rds","xlsx","csv","txt"))
