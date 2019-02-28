@@ -29,6 +29,10 @@ uniexport <- function(Robject,type,path,filename=NULL,date=FALSE, ...){
     Filetype=c("Rimage","Robject","excel","csv","textfile"),
     ext=c("RData","rds","xlsx","csv","txt"))
 
+  if (!type %in% eqDT[,Filetype]) {
+    warning('The type entered is not available. Please, choose one of the following types: (Robject, Rimage, excel, csv or textfile) ')
+  }
+
   ext <- eqDT[Filetype==type,ext]
   ad <- .path_to_export(path,filename,ext,date)
 
