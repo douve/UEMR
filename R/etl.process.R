@@ -16,17 +16,17 @@
 
 etl.process = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaixa',
                        cod.var = 'cod',agr.var='agr',select.drugs,start,end,
-                       cod=FALSE,n.cores=1,chunksize=4000){
+                       cod=FALSE,n.cores=1){
 
   options(warn=-1)
 
   # std. dataset_
-  data = data.frame(idp=data[,id.var],
+  aux = data.frame(idp=data[,id.var],
                     dat=data[,dat.var],dbaixa=data[,end.dat.var],
                     cod = data[,cod.var],agr=data[,agr.var])
 
   # - Individuals to process_
-  id = unique(data$idp)
+  id = unique(aux$idp)
   # start = start
   # end = end
 
@@ -36,29 +36,26 @@ etl.process = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaixa
   # - Configure parallelization_
   n.cores = n.cores
   niter <- n_distinct(id)             # iterations
-  chunksize <- chunksize  # may require tuning for your machine
+  # chunks <- chunks  # may require tuning for your machine
   maxcomb <- n.cores + 1  # this count includes fobj argument
 
   cl <- snow::makeSOCKcluster(n.cores) # make cluster
   doSNOW::registerDoSNOW(cl)           # register into cluster
 
   # - Progress bar_
-  pb <- utils::txtProgressBar(min=1, max=chunksize, style=3)
+  pb <- utils::txtProgressBar(min=1, max=niter, style=3)
   progress <- function(n) utils::setTxtProgressBar(pb, n)
   opts <- list(progress=progress)
   comb = 'rbind.data.frame'
-  # comb <- function(fobj, ...) {
-  #   for(r in list(...))
-  #     writeBin(r, fobj)
-  #   fobj
-  # }
 
 
   # - alignment parallelized by individual_
   s = Sys.time()
-  pETL = foreach(i = idiv(niter,chunks=chunksize), .packages = c("Kendall",'UEMR','data.table','anytime','dplyr'),
+  pETL = foreach(i = 1:niter,
+                 .packages = c("Kendall",'UEMR','data.table','anytime','dplyr'),
                  .options.snow = opts,
-                 .combine = comb,.maxcombine=maxcomb,
+                 .combine = comb,
+                 .maxcombine=maxcomb,
                  .multicombine = F) %dopar% {
 
                    # Concomitance algorithm:
@@ -128,14 +125,13 @@ etl.process = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaixa
 
                    gl = expand.grid(idp = id[i], dat = seq(from = start,
                                                            to = end, by = "day"))
-                   a = data %>% filter(idp == id[i]) %>%
+                   a = aux %>% filter(idp == id[i]) %>%
                      mutate(dat = ifelse(dat < start, start, dat),
                             dat = anytime::anydate(dat),
                             dif = dbaixa - dat) %>% filter(dif > 0) %>% left_join(gl,.) %>%
                      select(idp, dat, dbaixa, agr, cod)
 
-                   a.etl = alignment.ETL(a, select.drugs = select.drugs,
-                                               cod = cod)
+                   a.etl = alignment.ETL(a, select.drugs = select.drugs,cod = cod)
 
                    # Exists one column for each agr/cod in select.drugs? If not create the column (makes foreach .combine easier)
                    setd = setdiff(select.drugs,colnames(a.etl))
@@ -146,6 +142,7 @@ etl.process = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaixa
                      a.etl = cbind.data.frame(a.etl,m)
                    }
                    return(a.etl %>% select(idp,dat,dbaixa,nd,drugs,th,select.drugs))
+
                  }
 
   e = Sys.time()
