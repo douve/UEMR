@@ -38,7 +38,7 @@ smooth.process2 = function(data,n.cores=1,Wt=30,st=60){
   spresc = foreach(i = 1:niter,
                    .packages = c('Kendall','UEMR','tidyverse','data.table'),
                    .options.snow = opts,
-                   .combine = 'rbind',
+                   .combine = 'rbind.data.frame',
                    .multicombine = T) %dopar% {
                      
                      smooth.algorithm2 = function(x,select.drugs,Wt,st,id){
