@@ -17,7 +17,7 @@
 etl.process = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaixa',
                        cod.var = 'cod',agr.var='agr',select.drugs,start,end,
                        cod=FALSE,
-                       n.cores=parallel::detectCores() - 1,){
+                       n.cores=parallel::detectCores() - 1){
 
   options(warn=-1)
 
@@ -52,7 +52,6 @@ etl.process = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaixa
                  .packages = c("Kendall",'UEMR','data.table','anytime','dplyr'),
                  .options.snow = opts,
                  .combine = comb,
-                 .maxcombine=maxcomb,
                  .multicombine = F) %dopar% {
 
                    gl = expand.grid(idp = id[i], dat = seq(from = start,
