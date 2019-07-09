@@ -1,9 +1,9 @@
 .unit.path <- function(unit) {
-  os <- Sys.info()['sysname']
-  if (os=="Windows") {
+  os <- get_os()
+  if (os=="windows") {
     unit.path = paste0("//EPOFS/",unit,"/")
-  } else if (os=="Linux"){
-    unit.path = paste0("/run/user/1000/gvfs/smb-share:server=epofs,share=",unit,"/")
+  } else if (os=="linux"){
+    unit.path = paste0("/run/user/1000/gvfs/smb-share:server=epofs.fjgol.loc,share=",unit,"/")
   }
   return(unit.path)
 }
