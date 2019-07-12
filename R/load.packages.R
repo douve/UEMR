@@ -39,8 +39,8 @@
 
 load.packages <- function(x=NULL, update=F, dependent_pcs=T) {
   default.pcs <- c("data.table","tidyverse","tableone",
-                   "anytime","VennDiagram","lubridate","epitools", "survival",
-                   "readxl")
+                   "anytime","VennDiagram","lubridate",
+                   "epitools", "survival","readxl",'ggplot2')
 
   if (dependent_pcs) x <- c(x,default.pcs)
 
