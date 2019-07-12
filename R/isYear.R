@@ -1,4 +1,4 @@
 isYear = function(x){
-  stringr::str_extract(x,'[[:digit:]][[:digit:]]') %in% c("19","20",NA) %>%
-    all(na.rm=T)
+  if(nchar(x)!=4) FALSE
+  else stringr::str_extract(x,'[[:digit:]][[:digit:]]') %in% c("19","20") %>% all(na.rm=T)
 }
