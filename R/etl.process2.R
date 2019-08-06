@@ -49,6 +49,7 @@ etl.process2 = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaix
 
       # select individuals from first batch
       a = aux %>% filter(idp%in%unique(aux$idp)[inds[[1]]])
+      niter <- n_distinct(a$idp)
 
       comb = 'rbind.data.frame'
 
