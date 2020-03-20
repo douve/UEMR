@@ -42,10 +42,9 @@ uniexport <- function(Robject,type,path,filename=NULL,date=FALSE, ...){
               .dots_f(list(utils="write.table"),
                       c(elli,row.names=F))))
   } else if (type == "excel") {
-    do.call(xlsx::write.xlsx2,
-            c(list(x=Robject,file=ad),
-              .dots_f(list(xlsx="write.xlsx2"),
-                      c(elli,row.names=F))))
+    do.call(writexl::write_xlsx,
+            c(list(x=Robject,path=ad),
+              .dots_f(list(writexl="write_xlsx"),elli)))
   } else if (type == "Robject") {
     saveRDS(Robject,ad)
   } else if (type == "Rimage") {
