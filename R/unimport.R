@@ -20,7 +20,6 @@
     l = c(list(file),l)
     out = do.call(data.table::fread, l)
   }
-  out[out==''] <- NA
   return(out)
 }
 
