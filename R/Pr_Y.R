@@ -1,9 +1,9 @@
-reduce.month <- function(x) {
+.reduce.month <- function(x) {
   while(!x%in%1:12) x <- x - 12L
   return(x)
 }
 
-reduce.month <- function(x) {
+.reduce.month <- function(x) {
   i <- 1L
   while(!x%in%1:12) {
     x <- x - 12L
@@ -12,24 +12,8 @@ reduce.month <- function(x) {
   return(list(month=x,year=i))
 }
 
-# days_in_month2 <- function(x,year) {
-#   if (any(x > 12)) {
-#     if (length(year)==1L)
-#       stop('Only one year has passed')
-#
-#     Matr <- sapply(x, reduce.month)
-#     X <- mapply(function(x,y)Days_in_month(x,y),
-#              x=Matr[1,], y=anys[unlist(Matr[2,])])
-#
-#    return(c(Days_in_month(x[x<=12],year[1]),Days_in_month(X,year[2])))
-#   } else {
-#     if (length(year)>1L)
-#       warning('Only the first year has been used')
-#     return(Days_in_month(x,year[1L]))
-#   }
-# }
 
-days_in_month2 <- function(x,year) {
+.days_in_month2 <- function(x,year) {
   Matr <- sapply(x, reduce.month)
   X <- mapply(function(x,y)Days_in_month(x,y),
               x=Matr[1,], y=year[unlist(Matr[2,])])
@@ -53,8 +37,8 @@ days_in_month2 <- function(x,year) {
 }
 
 
-last_TRUE <- function(x) length(x)-match(TRUE,rev(x))+1
-last_m_len <- function(vec) {
+.last_TRUE <- function(x) length(x)-match(TRUE,rev(x))+1
+.last_m_len <- function(vec) {
   len_vec <- length(vec)
   if (len_vec < 12L) vec <- c(rep(F,12-len_vec),vec)
   m <- vector(mode = 'integer', length = len_vec)
