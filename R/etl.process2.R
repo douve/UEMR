@@ -57,7 +57,7 @@ etl.process2 = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaix
       doSNOW::registerDoSNOW(cl)           # register into cluster
 
       # - Progress bar_
-      pb <- utils::txtProgressBar(min=1, max=chunk.niter, style=3)
+      pb <- utils::txtProgressBar(min=1, max=(chunk.niter+1), style=3)
       progress <- function(n) utils::setTxtProgressBar(pb, n)
       opts <- list(progress=progress)
       comb = 'rbind.data.frame'
@@ -187,7 +187,7 @@ etl.process2 = function(data,id.var = 'idp',dat.var = 'dat',end.dat.var = 'dbaix
     doSNOW::registerDoSNOW(cl)           # register into cluster
 
     # - Progress bar_
-    pb <- utils::txtProgressBar(min=1, max=niter, style=3)
+    pb <- utils::txtProgressBar(min=1, max=(niter+1), style=3)
     progress <- function(n) utils::setTxtProgressBar(pb, n)
     opts <- list(progress=progress)
     comb = 'rbind.data.frame'
