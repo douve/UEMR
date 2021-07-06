@@ -5,7 +5,7 @@
   } else if (os=="linux"){
     unit.path = paste0("/run/user/1000/gvfs/smb-share:server=epofs.fjgol.loc,share=",unit,"/")
   } else if (os=='osx' & grepl('Air',Sys.info()['nodename'])){
-    unit.path = paste0("/Users/user/Documents/",unit,"/")
+    unit.path = paste0("/Users/danouchi/Google Drive/My Drive/",unit,"/")
   } else if(OS=='osx' & !grepl('Air',Sys.info()['nodename'])) {
     unit.path = paste0('/Volumes/virievac/',unit,"/")
   }
