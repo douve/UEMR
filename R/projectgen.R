@@ -1,23 +1,28 @@
-.unit.path <- function(unit) {
-  os <- get_os()
-  if (os=="windows") {
-    unit.path = paste0("//EPOFS/",unit,"/")
-  } else if (os=="linux"){
-    unit.path = paste0("/run/user/1000/gvfs/smb-share:server=epofs.fjgol.loc,share=",unit,"/")
-  } else if (os=='osx' & grepl('Air',Sys.info()['nodename'])){
-    unit.path = paste0("/Users/danouchi/Google Drive/My Drive/",unit,"/")
-  } else if(OS=='osx' & !grepl('Air',Sys.info()['nodename'])) {
-    unit.path = paste0('/Volumes/virievac/',unit,"/")
-  }
-  return(unit.path)
-}
+# .unit.path <- function(unit) {
+#   os <- get_os()
+#   if (os=="windows") {
+#     unit.path = paste0("//EPOFS/",unit,"/")
+#   } else if (os=="linux"){
+#     unit.path = paste0("/run/user/1000/gvfs/smb-share:server=epofs.fjgol.loc,share=",unit,"/")
+#   } else if (os=='osx' & grepl('Air',Sys.info()['nodename'])){
+#     unit.path = paste0("/Users/danouchi/Google Drive/My Drive/",unit,"/")
+#   } else if(OS=='osx' & !grepl('Air',Sys.info()['nodename'])) {
+#     unit.path = paste0('/Volumes/virievac/',unit,"/")
+#   }
+#   return(unit.path)
+# }
 
 
 
-project.gen <- function(name,unit,folders=c("data", "scr", "output", "doc","trash")) {
+project.gen <- function(name,path=NULL,folders=c("data", "scr", "output", "doc","trash")) {
 
   R_files <- c("main","data_management","dqa","variables","analysis")
-  path <- paste0(.unit.path(unit),name)
+
+  if(is.null(path)) stop('please specify a path')
+
+  # path <- paste0(.unit.path(unit),name)
+  path <- paste0(path,'/',name)
+
   if (!file.exists(path)) {
     dir.create(path)
     setwd(path)
