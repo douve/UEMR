@@ -2,13 +2,12 @@ Package: UEMR
 Date: 2017-11-24
 Type: Package
 Title: Unitat Estudi del Medicament R functions (UEMR)
-Version: 0.2.0
+Version: 0.2.1
 Author: Oriol Prat & Dan Ouchi & Carles
 Maintainer: Dan Ouchi <douchi@idiapjgol.info>
-Depends: R (>= 3.1.0), dplyr, data.table, lubridate, anytime
+Depends: R (>= 3.1.0), dplyr, data.table, lubridate, anytime, stringr
 Imports: 
     epitools,
-    stringr,
     xlsx
 Description: Tools for data management and statistical analysis in projects related to UEM
 License: GPL-3.0
