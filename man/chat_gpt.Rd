@@ -78,8 +78,15 @@ Dan Ouchi
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+
+## Assign API key for the actual session:
 api_key <- "your_openai_api_key"
 Sys.setenv(OPENAI_API_KEY = api_key)
+
+## Persistent (session-wide) assign to .Renviron:
+usethis::edit_r_environ()
+# it will open the file and you just need to write a line with you api key
+# OPENAI_API_KEY=XX-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 ## How to ask to chatGPT for R code:
 # The best way to ask for R code is to provide a clear and specific description of the task you want to accomplish,
@@ -89,13 +96,12 @@ Sys.setenv(OPENAI_API_KEY = api_key)
 # Additionally, providing a desired output or format for the results can help ensure that the code meets
 # your needs.
 
-## This is the main sentence to get a good answer from chatGPT:
+## This is an example to make a request and get a good answer from chatGPT:
 main.prompt = 'I want you to act as R programmer. I will ask you to write scripts based on my requests and you will reply the answer.I want you to only reply with the code, and nothing else. Do not write explanations. My request is'
 
-## An example of how to make a request:
 chat_gpt(prompt =paste0(main.prompt,"'Can you provide R code to create a scatterplot of two variables, x and y, from a dataset called 'data.csv'? Please label the x-axis 'X-axis' and the y-axis 'Y-axis', and include a title for the plot. Thank you.'"))
 
-# output:
+# chatGPT answer:
 # library(ggplot2)
 # data <- read.csv("data.csv")
 # ggplot(data, aes(x = x, y = y)) +
@@ -109,7 +115,7 @@ chat_gpt("What is the R code to create a color palette of more than the maximum 
 ## Generating multiple responses
 chat_gpt("What is the R code to create a color palette of more than the maximum values that has the Spectral Palette? Provide only the code no explanaitions nor any other information", n = 5)
 
-## save the answer and use it to get modify, extend or improve them:
+## save the answer and use it to modify, extend or improve them by asking again to the chatGPT:
 answer = chat_gpt(prompt =paste0(main.prompt,"'Can you provide R code to make webscrapping for the webpage idiapjgol.org?'"),verbose=F,n=1)
 chat_gpt(prompt =paste0(main.prompt,"'Can you add a code to download images from the scrapping you programmed in the last answer?'",answer))
 

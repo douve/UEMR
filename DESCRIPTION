@@ -5,7 +5,7 @@ Title: Unitat Estudi del Medicament R functions (UEMR)
 Version: 0.2.1
 Author: Oriol Prat & Dan Ouchi & Carles
 Maintainer: Dan Ouchi <douchi@idiapjgol.info>
-Depends: R (>= 3.1.0), dplyr, data.table, lubridate, anytime, stringr
+Depends: R (>= 3.1.0), dplyr, data.table, lubridate, anytime, stringr, httr
 Imports: 
     epitools,
     xlsx

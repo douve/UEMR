@@ -1,6 +1,4 @@
 
-library(httr)
-library(stringr)
 
 #' Generate a response to a natural language prompt using the OpenAI GPT-3.5 Turbo language model
 #'
@@ -35,7 +33,7 @@ chat_gpt <- function(prompt, model = "gpt-3.5-turbo", temperature = 0.5,
   response <- httr::POST(
     url = "https://api.openai.com/v1/chat/completions",
     add_headers(Authorization = paste("Bearer", api_key)),
-    content_type_json(),
+    httr::content_type_json(),
     encode = "json",
     body = list(
       model = model,

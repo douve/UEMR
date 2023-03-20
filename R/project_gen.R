@@ -14,14 +14,14 @@
 
 
 
-project.gen <- function(name,path=NULL,folders=c("data", "scr", "output", "doc","trash")) {
+project_gen <- function(name,path=NULL,folders=c("data", "scr", "output", "doc","trash")) {
 
   R_files <- c("main","data_management","dqa","variables","analysis")
 
   if(is.null(path)) stop('please specify a path')
 
   # path <- paste0(.unit.path(unit),name)
-  path <- paste0(path,'/',name)
+  path <- paste0(path,name)
 
   if (!file.exists(path)) {
     dir.create(path)
@@ -50,7 +50,14 @@ project.gen <- function(name,path=NULL,folders=c("data", "scr", "output", "doc",
 
                       '# Load packages --------------------------------------------------------------------',
                       'require(UEMR)',
-                      'load.packages()\n',
+                      'load.packages()\n\n',
+
+                      '# Set API key for chatGPT --------------------------------------------------------------------',
+                      'if (file.size("~/.Renviron") == 0) {',
+                      'api_key <- "your_openai_api_key"',
+                      'Sys.setenv(OPENAI_API_KEY = api_key)',
+                      '}',
+                      '\n\n',
 
                       '## Set path to folders:',
                       paste0('path.data = \"',paths$path.data,"\""),
