@@ -32,7 +32,7 @@ chat_gpt <- function(prompt, model = "gpt-3.5-turbo", temperature = 0.5,
 
   response <- httr::POST(
     url = "https://api.openai.com/v1/chat/completions",
-    add_headers(Authorization = paste("Bearer", api_key)),
+    httr::add_headers(Authorization = paste("Bearer", api_key)),
     httr::content_type_json(),
     encode = "json",
     body = list(
@@ -56,7 +56,7 @@ chat_gpt <- function(prompt, model = "gpt-3.5-turbo", temperature = 0.5,
   }
 
   # Parse response JSON
-  response_json <- suppressMessages(jsonlite::fromJSON(content(response, "text"), simplifyVector = TRUE))
+  response_json <- suppressMessages(jsonlite::fromJSON(httr::content(response, "text"), simplifyVector = TRUE))
 
   # Extract text from response
   response_text <- response_json$choices$message$content
@@ -107,6 +107,3 @@ chat_gpt <- function(prompt, model = "gpt-3.5-turbo", temperature = 0.5,
 #' Other examples:
 # chat_gpt(prompt =paste0(main.prompt,"Can you give a R markdown code which makes a dummy dataset, select all numerical columns and analyses the association between variables using dendrogram and cluster techniques? The values must be normalized before conducting the clusterization. I want to show the results in the markdown using plotly for an interactive plot."))
 # chat_gpt(prompt =paste0(main.prompt,"'What is the R code to separate one column into two using ',' as separator?'"),n=1)
-
-
-
