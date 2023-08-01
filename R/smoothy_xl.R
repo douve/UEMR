@@ -1,93 +1,119 @@
 
 
+# This functions assumes that the input data has four columns: id, start date, end date, drug/agr:
 
-smoothy_xl <- function(data,size = NULL, ncores = parallel::detectCores() - 1, diff = TRUE){
-  
+smoothy_xl <- function(data,start.date,end.date,size = NULL, ncores = parallel::detectCores() - 1, diff = FALSE){
+
   if(is.null(size)) stop("Please provide a value for 'size' argument.")
-  
-  if(diff){
-    
-    my_data <- data
-    
-    n.cores <- ncores
-    niter <- n_distinct(my_data$id)
-    chunks <- ceiling(niter/size)
-    
-    inds <- split(seq_len(niter), sort(rep_len(seq_len(chunks),
-                                               niter)))
-    for (i in 1:chunks) {
-      
-      cat("chunk:", i, "\n")
-      chunk.id <- unique(my_data$id)[inds[[i]]]
-      chunk.data <- my_data %>% filter(id %in% chunk.id)
-      chunk.niter <- length(chunk.id)
-      
-      doMC::registerDoMC(n.cores)
-      getDoParWorkers()
-      
-      comb <- "rbind.data.frame"
-      echunk <- foreach(c = 1:chunk.niter,
-                        .packages = c("Kendall", "smoothy", "data.table", "anytime", "dplyr"),
-                        # .options.snow = opts,
-                        .combine = comb, .multicombine = F) %dopar% {
-                          
-                          
-                          # run the workflow in each individual from the chunk:
-                          df <- filter(my_data, id == chunk.id[c])
-                          
-                          # 1) parse data:
-                          structured_df <- smooth_parse(
-                            id = df$id,
-                            start_date = df$start_date,
-                            end_date = df$end_date,
-                            drug = df$drug,
-                            study_from = "1970-01-01",
-                            study_to = "1975-01-01"
-                          )
-                          
-                          # 2) smooth algorithm:
-                          id <- structured_df$id
-                          treatment <- structured_df$treatment
-                          day <- structured_df$day
-                          N <- structured_df$N
-                          width <- 61
-                          
-                          smoothed <- smooth_algorithm(id = id, treatment = treatment, day = day, N = N, width = width)
-                          
-                          # 3) calculate how algorithm is changing the raw data:
-                          diff <- smooth_diff(treatment = smoothed$treatment, smoothed_treatment = smoothed$smoothed_treatment)
-                          
-                          # 4) deparse data (original format):
-                          deparsed_smoothed <- smooth_deparse(smoothed$id, smoothed$day, smoothed$smoothed_treatment)
-                          
-                          # 4.1) add differences:
-                          diff$proportion_of_change <- round(diff$proportion_of_change*100,2)
-                          diff$id <- deparsed_smoothed$id[1]
-                          diff <- diff %>% filter(type%in%c('Global','Expousure period'))
-                          
-                          res <- left_join(
-                            deparsed_smoothed,
-                            reshape2::dcast(diff,id~type,value.var='proportion_of_change')
-                          )
-                          
-                          return(res)
-                          
-                        }
-      
-      saveRDS(echunk, paste0(tempdir(),"/chunk_", i,".rds"))
-    }
-    
-    # Combine all chunks into one single data.frame:
-    rds_files <- list.files(tempdir(), pattern = "chunk_", full.names = TRUE)
-    all_df <- bind_rows(lapply(rds_files, readRDS))
-    
-    return(all_df)
-    
-  }else{
-    
-    
-    
-  }
+  if(dim(data)[2]!=4) stop("Please provide a valid input data")
 
-  
+  # rename:
+  names(data) = c('id','dat','edat','drug')
+
+  # starting date:
+  s0 = Sys.time()
+
+  # create chunks:
+  niter <- n_distinct(data$id)
+  chunks <- ceiling(niter/size)
+  inds <- split(seq_len(niter), sort(rep_len(seq_len(chunks),
+                                             niter)))
+
+  # parallel - cores and socket:
+  n.cores <- parallel::detectCores() - 1
+  cl <- snow::makeSOCKcluster(n.cores)
+  doSNOW::registerDoSNOW(cl)
+
+  # progress bar:
+  pb <- utils::txtProgressBar(min = 1, max = chunks, style = 3)
+  progress <- function(n) utils::setTxtProgressBar(pb,n)
+  opts <- list(progress = progress)
+
+  # path to temporal directory:
+  tmp.path = tempdir()
+
+  l <- foreach(c = 1:chunks,
+               .packages = c("Kendall", "smoothy", "data.table", "anytime", "dplyr"),
+               .options.snow = opts,
+               .multicombine = F) %dopar% {
+
+                 chunk.id <- unique(data$id)[inds[[c]]]
+
+                 # run the workflow in each individual from the chunk:
+                 df <- filter(data, id %in% chunk.id)
+
+                 # 1) parse data:
+                 structured_df <- smooth_parse(
+                   id = df$id,
+                   start_date = df$dat,
+                   end_date = df$edat,
+                   drug = df$drug,
+                   study_from = start.date,
+                   study_to = end.date
+                 )
+
+                 # 2) smooth algorithm:
+                 id <- structured_df$id
+                 treatment <- structured_df$treatment
+                 day <- structured_df$day
+                 N <- structured_df$N
+                 width <- 61
+
+                 smoothed <- smooth_algorithm(id = id, treatment = treatment, day = day, N = N, width = width)
+
+                 # 3) deparse data (original format):
+                 deparsed_smoothed <- smooth_deparse(smoothed$id, smoothed$day, smoothed$smoothed_treatment)
+
+
+                 # 4) Per patient changes due to smooth algorithm:
+                 if(diff){
+
+                   # Calculate differences by patient mapping with the group_map function:
+                   diff <- smoothed %>%
+                     group_by(id) %>%
+                     group_map(~ smooth_diff(.$treatment,.$smoothed_treatment)) %>%
+                     bind_rows(.id = "group_id") %>%
+                     data.frame
+
+                   # Format output and filter global, exposure period:
+                   diff <- diff %>%
+                     mutate(percentage_of_change = round(proportion_of_change*100,2)) %>%
+                     filter(type%in%c('Global','Expousure period')) %>%
+                     mutate(type = factor(type,levels=c('Global','Expousure period'),
+                                          labels=c('total_change','exposure_change')))
+                   # add 'id' and reshape:
+                   diff <- diff %>%
+                     left_join(data.frame(id=unique(smoothed$id),group_id = as.character(seq(1,n_distinct(smoothed$id))))) %>%
+                     reshape2::dcast(id~type,value.var='percentage_of_change')
+
+                   # attach to deparsed_smoothed dataframe:
+                   deparsed_smoothed <- left_join(
+                     deparsed_smoothed,
+                     diff
+                   )
+
+                 }
+
+                 # Save chunk output to a temporary folder:
+                 saveRDS(deparsed_smoothed,paste0(tmp.path,"/chunk_",c,".rds"))
+
+                 rm(deparsed_smoothed);gc()
+
+               }
+
+
+  # close sockets:
+  close(pb)
+  snow::stopCluster(cl)
+
+  # Time to finish the process:
+  t0 = Sys.time() - s0
+  cat("\n The process finished in", round(t0), units(t0)) # The process finished in 16 hours
+
+  # Import and combine all chunks into a single data.frame:
+  rds_files <- list.files(tmp.path, pattern = "chunk_", full.names = TRUE)
+  all_chunks <- bind_rows(lapply(rds_files, readRDS))
+
+  return(all_chunks)
+
 }
