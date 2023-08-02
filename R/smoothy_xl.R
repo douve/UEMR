@@ -82,8 +82,8 @@ smoothy_xl <- function(data,start.date,end.date,size = NULL, ncores = parallel::
                    # Format output and filter global, exposure period:
                    aux <- aux %>%
                      mutate(percentage_of_change = round(proportion_of_change*100,2)) %>%
-                     filter(type%in%c('Global','Exposure_period')) %>%
-                     mutate(type = factor(type,levels=c('Global','Exposure_period'),
+                     filter(type%in%c('Global','Exposure period')) %>%
+                     mutate(type = factor(type,levels=c('Global','Exposure period'),
                                           labels=c('total_change','exposure_change')))
                    # add 'id' and reshape:
                    aux <- aux %>%
