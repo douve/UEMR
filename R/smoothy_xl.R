@@ -2,7 +2,7 @@
 
 # This functions assumes that the input data has four columns: id, start date, end date, drug/agr:
 
-smoothy_xl <- function(data,start.date,end.date,size = NULL, ncores = parallel::detectCores() - 1, diff = FALSE){
+smoothy_xl <- function(data, start.date, end.date, wt = 61, diff=F, size = NULL, ncores = parallel::detectCores() - 1){
 
   if(is.null(size)) stop("Please provide a value for 'size' argument.")
   if(dim(data)[2]!=4) stop("Please provide a valid input data")
@@ -53,7 +53,7 @@ smoothy_xl <- function(data,start.date,end.date,size = NULL, ncores = parallel::
                  )
 
                  # 2) smooth algorithm:
-                 width <- 61
+                 width <- wt
                  smoothed <- smooth_algorithm(
                    id = structured_df$id,
                    treatment = structured_df$treatment,
