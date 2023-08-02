@@ -53,17 +53,21 @@ smoothy_xl <- function(data,start.date,end.date,size = NULL, ncores = parallel::
                  )
 
                  # 2) smooth algorithm:
-                 id <- structured_df$id
-                 treatment <- structured_df$treatment
-                 day <- structured_df$day
-                 N <- structured_df$N
                  width <- 61
-
-                 smoothed <- smooth_algorithm(id = id, treatment = treatment, day = day, N = N, width = width)
+                 smoothed <- smooth_algorithm(
+                   id = structured_df$id,
+                   treatment = structured_df$treatment,
+                   day = structured_df$day,
+                   N = structured_df$N,
+                   width = width
+                   )
 
                  # 3) deparse data (original format):
-                 deparsed_smoothed <- smooth_deparse(smoothed$id, smoothed$day, smoothed$smoothed_treatment)
-
+                 deparsed_smoothed <- smooth_deparse(
+                   smoothed$id,
+                   smoothed$day,
+                   smoothed$smoothed_treatment
+                   )
 
                  # 4) Per patient changes due to smooth algorithm:
                  if(diff){
@@ -92,12 +96,14 @@ smoothy_xl <- function(data,start.date,end.date,size = NULL, ncores = parallel::
                      aux
                    )
 
+                   rm(aux)
+
                  }
 
                  # Save chunk output to a temporary folder:
                  saveRDS(deparsed_smoothed,paste0(tmp.path,"/chunk_",c,".rds"))
 
-                 rm(deparsed_smoothed);gc()
+                 rm(df,structured_df,smoothed,deparsed_smoothed);gc()
 
                }
 
