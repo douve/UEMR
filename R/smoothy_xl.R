@@ -69,27 +69,27 @@ smoothy_xl <- function(data,start.date,end.date,size = NULL, ncores = parallel::
                  if(diff){
 
                    # Calculate differences by patient mapping with the group_map function:
-                   diff <- smoothed %>%
+                   aux <- smoothed %>%
                      group_by(id) %>%
                      group_map(~ smooth_diff(.$treatment,.$smoothed_treatment)) %>%
                      bind_rows(.id = "group_id") %>%
                      data.frame
 
                    # Format output and filter global, exposure period:
-                   diff <- diff %>%
+                   aux <- aux %>%
                      mutate(percentage_of_change = round(proportion_of_change*100,2)) %>%
-                     filter(type%in%c('Global','Expousure period')) %>%
-                     mutate(type = factor(type,levels=c('Global','Expousure period'),
+                     filter(type%in%c('Global','Exposure_period')) %>%
+                     mutate(type = factor(type,levels=c('Global','Exposure_period'),
                                           labels=c('total_change','exposure_change')))
                    # add 'id' and reshape:
-                   diff <- diff %>%
+                   aux <- aux %>%
                      left_join(data.frame(id=unique(smoothed$id),group_id = as.character(seq(1,n_distinct(smoothed$id))))) %>%
                      reshape2::dcast(id~type,value.var='percentage_of_change')
 
                    # attach to deparsed_smoothed dataframe:
                    deparsed_smoothed <- left_join(
                      deparsed_smoothed,
-                     diff
+                     aux
                    )
 
                  }
