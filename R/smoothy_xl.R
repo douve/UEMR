@@ -120,6 +120,8 @@ smoothy_xl <- function(data, start.date, end.date, wt = 61, diff=F, size = NULL,
   rds_files <- list.files(tmp.path, pattern = "chunk_", full.names = TRUE)
   all_chunks <- bind_rows(lapply(rds_files, readRDS))
 
+  file.remove(rds_files) # remove rds files in temporary folder
+  
   return(all_chunks)
 
 }
